@@ -1,6 +1,8 @@
 import 'package:firebase_exercise_1/constants.dart';
 import 'package:flutter/material.dart';
 import 'addRecord.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() => runApp(MoneyTracker());
 
@@ -36,26 +38,35 @@ class ScrollableHomeContents extends StatelessWidget {
           SafeArea(
             child: Column(
               children: [
-                Container(
-                    height: size.height * 0.3,
-                    width: size.width,
-                    color: Colors.red,
-                    alignment: Alignment.center,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Total amount:',
-                          style: TextStyle(
-                              fontSize: 21, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          '1000.00',
-                          style: TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    )),
+                StreamBuilder(
+                  stream: Firestore.instance
+                      .collection('testcollection')
+                      .snapshots(),
+                  builder: (context,snapshot) {
+                    if (!snapshot.hasData) return const Text('Loading...');
+
+                    return Container(
+                      height: size.height * 0.3,
+                      width: size.width,
+                      color: Colors.red,
+                      alignment: Alignment.center,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Total amount:',
+                            style: TextStyle(
+                                fontSize: 21, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            snapshot.data?.toString() ?? "WRONG",
+                            style: TextStyle(
+                                fontSize: 30, fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      ));
+                  }
+                ),
                 Container(
                     height: size.height * 0.3,
                     width: size.width,
@@ -113,8 +124,11 @@ class DashboardButtons extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: TextStyle(fontWeight: FontWeight.bold)),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddRecord(type: RecordType.expense)));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            AddRecord(type: RecordType.expense)));
               },
               style: ButtonStyle(
                   fixedSize: MaterialStateProperty.all<Size>(
@@ -132,8 +146,11 @@ class DashboardButtons extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: TextStyle(fontWeight: FontWeight.bold)),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddRecord(type: RecordType.income)));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            AddRecord(type: RecordType.income)));
               },
               style: ButtonStyle(
                   fixedSize: MaterialStateProperty.all<Size>(Size(100, 50)),
@@ -150,8 +167,11 @@ class DashboardButtons extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: TextStyle(fontWeight: FontWeight.bold)),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddRecord(type: RecordType.money)));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            AddRecord(type: RecordType.money)));
               },
               style: ButtonStyle(
                   fixedSize: MaterialStateProperty.all<Size>(

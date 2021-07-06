@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "45957627196",
+    "firebase_url": "https://moneytrackerexercise-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "moneytrackerexercise",
+    "storage_bucket": "moneytrackerexercise.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:45957627196:android:4ccb6989804dd9696c7239",
+        "android_client_info": {
+          "package_name": "com.training.moneyTracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "45957627196-uvpa091antbmtroc6oriaujkn67k0v26.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvcu0YSwTNzK4DO4-EXmvYkBubmXzQsxU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "45957627196-uvpa091antbmtroc6oriaujkn67k0v26.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "45957627196-0eqvh549kobvak87ibnriv8qfvtmn3ok.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.training.moneyTracker"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>45957627196-0eqvh549kobvak87ibnriv8qfvtmn3ok.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.45957627196-0eqvh549kobvak87ibnriv8qfvtmn3ok</string>
+	<key>API_KEY</key>
+	<string>AIzaSyA-5ll2j-fZ3m-JF-Zd5C5m0x1BYcJ6wOo</string>
+	<key>GCM_SENDER_ID</key>
+	<string>45957627196</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.training.moneyTracker</string>
+	<key>PROJECT_ID</key>
+	<string>moneytrackerexercise</string>
+	<key>STORAGE_BUCKET</key>
+	<string>moneytrackerexercise.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:45957627196:ios:a2bcae88939d416d6c7239</string>
+</dict>
+</plist>
