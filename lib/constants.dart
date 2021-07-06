@@ -14,3 +14,19 @@ extension TextFieldTypeExtension on TextFieldType {
     }
   }
 }
+
+enum RecordType {
+  expense,
+  income,
+  money
+}
+
+extension RecorTypeExt on RecordType {
+  String get stringValue {
+    switch (this) {
+      case RecordType.income: return 'Income';
+      case RecordType.expense: return 'Expense';
+      case RecordType.money: return 'Money on hand';
+    }
+  }
+}

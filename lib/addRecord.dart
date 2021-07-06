@@ -1,25 +1,30 @@
 import 'package:flutter/material.dart';
 import 'constants.dart';
 
+class AddRecord extends StatefulWidget {
+  final RecordType type;
+  const AddRecord({ Key? key, required this.type }) : super(key: key);
 
-class AddRecord extends StatelessWidget {
-  const AddRecord({Key? key}) : super(key: key);
+  @override
+  _AddRecordState createState() => _AddRecordState();
+}
 
+class _AddRecordState extends State<AddRecord> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('Add Expense')), body: MyCustomForm());
+        appBar: AppBar(title: Text('Add ' + widget.type.stringValue)), body: AddRecordForm());
   }
 }
 
-class MyCustomForm extends StatefulWidget {
+class AddRecordForm extends StatefulWidget {
   @override
-  MyCustomFormState createState() {
-    return MyCustomFormState();
+  AddRecordFormState createState() {
+    return AddRecordFormState();
   }
 }
 
-class MyCustomFormState extends State<MyCustomForm> {
+class AddRecordFormState extends State<AddRecordForm> {
   @override
   Widget build(BuildContext context) {
     return Column(

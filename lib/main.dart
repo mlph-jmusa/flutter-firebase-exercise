@@ -1,3 +1,4 @@
+import 'package:firebase_exercise_1/constants.dart';
 import 'package:flutter/material.dart';
 import 'addRecord.dart';
 
@@ -113,7 +114,7 @@ class DashboardButtons extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.bold)),
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddRecord()));
+                    MaterialPageRoute(builder: (context) => AddRecord(type: RecordType.expense)));
               },
               style: ButtonStyle(
                   fixedSize: MaterialStateProperty.all<Size>(
@@ -130,7 +131,10 @@ class DashboardButtons extends StatelessWidget {
               child: Text('Add\nIncome',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontWeight: FontWeight.bold)),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AddRecord(type: RecordType.income)));
+              },
               style: ButtonStyle(
                   fixedSize: MaterialStateProperty.all<Size>(Size(100, 50)),
                   foregroundColor:
@@ -145,7 +149,10 @@ class DashboardButtons extends StatelessWidget {
               child: Text('Add\nMoney',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontWeight: FontWeight.bold)),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AddRecord(type: RecordType.money)));
+              },
               style: ButtonStyle(
                   fixedSize: MaterialStateProperty.all<Size>(
                       Size(size.width * 0.23, 50)),
