@@ -1,33 +1,32 @@
-import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_exercise_1/constants.dart';
 import 'package:flutter/material.dart';
 import 'addRecord.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() => runApp(MoneyTracker());
 
 class MoneyTracker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      // Initialize FlutterFire
-      future: Firebase.initializeApp(),
-      builder: (context, snapshot) {
-        // Check for errors
-        if (snapshot.hasError) {
-          return MaterialApp(title: 'Money Tracker', home: Dashboard());
-        }
+    // return FutureBuilder(
+    //   // Initialize FlutterFire
+    //   future: Firebase.initializeApp(),
+    //   builder: (context, snapshot) {
+    //     // Check for errors
+    //     if (snapshot.hasError) {
+    //       return MaterialApp(title: 'Money Tracker', home: Dashboard());
+    //     }
 
-        // Once complete, show your application
-        if (snapshot.connectionState == ConnectionState.done) {
+    //     // Once complete, show your application
+    //     if (snapshot.connectionState == ConnectionState.done) {
           return MaterialApp(title: 'Money Tracker', home: Dashboard());
-        }
+    //     }
 
-        // Otherwise, show something whilst waiting for initialization to complete
-        return MaterialApp(title: 'Money Tracker', home: Dashboard());
-      },
-    );
-    // return MaterialApp(title: 'Money Tracker', home: Dashboard());
+    //     // Otherwise, show something whilst waiting for initialization to complete
+    //     return MaterialApp(title: 'Money Tracker', home: Text('Loading...'));
+    //   },
+    // );
   }
 }
 
@@ -58,37 +57,37 @@ class ScrollableHomeContents extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 70),
               child: Column(
                 children: [
-                  StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection('testcollection')
-                          .snapshots(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (!snapshot.hasData) return const Text('Loading...');
+                  // StreamBuilder(
+                  //     stream: FirebaseFirestore.instance
+                  //         .collection('testcollection')
+                  //         .snapshots(),
+                  //     builder: (BuildContext context,
+                  //         AsyncSnapshot<QuerySnapshot> snapshot) {
+                  //       if (!snapshot.hasData) return const Text('Loading...');
 
-                        return Container(
-                            height: size.height * 0.3,
-                            width: size.width,
-                            color: Colors.red,
-                            alignment: Alignment.center,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Total amount:',
-                                  style: TextStyle(
-                                      fontSize: 21, fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  snapshot.data?.docs.first["testvalue"]
-                                          .toString() ??
-                                      "WRONG",
-                                  style: TextStyle(
-                                      fontSize: 30, fontWeight: FontWeight.bold),
-                                )
-                              ],
-                            ));
-                      }),
+                  //       return Container(
+                  //           height: size.height * 0.3,
+                  //           width: size.width,
+                  //           color: Colors.red,
+                  //           alignment: Alignment.center,
+                  //           child: Column(
+                  //             mainAxisAlignment: MainAxisAlignment.center,
+                  //             children: [
+                  //               Text(
+                  //                 'Total amount:',
+                  //                 style: TextStyle(
+                  //                     fontSize: 21, fontWeight: FontWeight.bold),
+                  //               ),
+                  //               Text(
+                  //                 snapshot.data?.docs.first["testvalue"]
+                  //                         .toString() ??
+                  //                     "WRONG",
+                  //                 style: TextStyle(
+                  //                     fontSize: 30, fontWeight: FontWeight.bold),
+                  //               )
+                  //             ],
+                  //           ));
+                  //     }),
                   Container(
                       height: size.height * 0.3,
                       width: size.width,
@@ -105,22 +104,22 @@ class ScrollableHomeContents extends StatelessWidget {
                         ],
                       )),
                   Container(
-                    child: StreamBuilder(
-                      stream: FirebaseFirestore.instance.collection('records').snapshots(),
-                      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    // child: StreamBuilder(
+                    //   stream: FirebaseFirestore.instance.collection('records').snapshots(),
+                    //   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                         
-                        if (!snapshot.hasData) return const Text('Connection Error');
-                        return ListView.separated(shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, position) {
-                          var amount = snapshot.data?.docs[position]["amount"].toString() ?? '';
-                          var desc = snapshot.data?.docs[position]["desc"].toString() ?? '';
-                          var date = snapshot.data?.docs[position]["updatedAt"].toString() ?? '';
-                        return RecordCell(amount: amount, desc: desc, date: date);
-                      }, separatorBuilder: (context, position) {
-                        return Text('-------------');
-                      }, itemCount: snapshot.data?.docs.length ?? 0);
-                      })
+                    //     if (!snapshot.hasData) return const Text('Connection Error');
+                    //     return ListView.separated(shrinkWrap: true,
+                    //   physics: NeverScrollableScrollPhysics(),
+                    //     itemBuilder: (context, position) {
+                    //       var amount = snapshot.data?.docs[position]["amount"].toString() ?? '';
+                    //       var desc = snapshot.data?.docs[position]["desc"].toString() ?? '';
+                    //       var date = snapshot.data?.docs[position]["updatedAt"].toString() ?? '';
+                    //     return RecordCell(amount: amount, desc: desc, date: date);
+                    //   }, separatorBuilder: (context, position) {
+                    //     return Text('-------------');
+                    //   }, itemCount: snapshot.data?.docs.length ?? 0);
+                    //   })
                     // ListView(
                     //   semanticChildCount: 1,
                     //   children: [RecordCell()],
@@ -141,7 +140,8 @@ class ScrollableHomeContents extends StatelessWidget {
                     //           fontSize: 30, fontWeight: FontWeight.bold),
                     //     )
                     //   ],
-                    // )
+                    // )T
+                    child: Text('HELLO')
                   ),
                 ],
               ),

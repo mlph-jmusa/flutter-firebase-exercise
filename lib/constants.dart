@@ -29,4 +29,23 @@ extension RecorTypeExt on RecordType {
       case RecordType.money: return 'Money on hand';
     }
   }
+
+  static RecordType getType(int value) {
+    switch (value) {
+      case 0: return RecordType.expense;
+      case 1: return RecordType.income;
+      case 2: return RecordType.money;
+      default: return RecordType.expense;
+    }
+  }
+}
+
+class Record {
+  final RecordType type;
+  final double amount;
+  final String desc;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  Record(this.type, this.amount, this.desc, this.createdAt, this.updatedAt);
 }
