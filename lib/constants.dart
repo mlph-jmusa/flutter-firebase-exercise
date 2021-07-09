@@ -1,4 +1,7 @@
 
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:intl/intl.dart';
+
 enum TextFieldType {
   amount,
   description,
@@ -21,7 +24,7 @@ enum RecordType {
   money
 }
 
-extension RecorTypeExt on RecordType {
+extension RecordTypeExt on RecordType {
   String get stringValue {
     switch (this) {
       case RecordType.income: return 'Income';
@@ -30,6 +33,16 @@ extension RecorTypeExt on RecordType {
     }
   }
 
+  int get intValue {
+    switch (this) {
+      case RecordType.income: return 1;
+      case RecordType.expense: return 0;
+      case RecordType.money: return 2;
+    }
+  }
+}
+
+class RecordTypeHelper {
   static RecordType getType(int value) {
     switch (value) {
       case 0: return RecordType.expense;
@@ -41,11 +54,15 @@ extension RecorTypeExt on RecordType {
 }
 
 class Record {
-  final RecordType type;
-  final double amount;
-  final String desc;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  RecordType type;
+  double amount;
+  String desc;
+  DateTime createdAt;
 
-  Record(this.type, this.amount, this.desc, this.createdAt, this.updatedAt);
+  Record(this.type, this.amount, this.desc, this.createdAt);
 }
+
+String formatDate(DateTime _date) {
+    var formatter = DateFormat("MMMM dd, yyyy");
+    return formatter.format(_date);
+  }
