@@ -152,6 +152,7 @@ class AddButton extends StatelessWidget {
             child: TextButton(
                 onPressed: () {
                   FirebaseFirestore.instance.collection('records').add({
+                    'type': record.type.intValue,
                     'amount': record.amount.toString(),
                     'desc': record.desc,
                     'createdAt': record.createdAt,

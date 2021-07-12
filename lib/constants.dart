@@ -1,6 +1,7 @@
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 enum TextFieldType {
   amount,
@@ -60,6 +61,15 @@ class Record {
   DateTime createdAt;
 
   Record(this.type, this.amount, this.desc, this.createdAt);
+
+  static Record init(QueryDocumentSnapshot<Object?> data) {
+    RecordType type = RecordTypeHelper.getType(data["type"]);
+    double amount = double.tryParse(data["amount"].toString()) ?? 0.0;
+    String desc = data["desc"].toString();
+    DateTime date = DateTime.tryParse(data["createdAt"].toString()) ?? DateTime.now();
+
+    return Record(type, amount, desc, date);
+  }
 }
 
 String formatDate(DateTime _date) {
