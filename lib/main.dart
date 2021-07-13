@@ -1,10 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_exercise_1/charts.dart';
 import 'package:firebase_exercise_1/constants.dart';
+import 'package:firebase_exercise_1/transactionHistory.dart';
 import 'package:flutter/material.dart';
 import 'addRecord.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'cacheManager.dart';
+import 'extensions.dart';
 
 void main() => runApp(MoneyTracker());
 
@@ -111,7 +113,7 @@ class _ScrollableHomeContentsState extends State<ScrollableHomeContents> {
                         return Container(
                             // height: size.height * 0.2,
                             width: size.width,
-                            color: Colors.green,
+                            // color: Colors.green,
                             alignment: Alignment.center,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -126,7 +128,7 @@ class _ScrollableHomeContentsState extends State<ScrollableHomeContents> {
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          'Total amount:',
+                                          'Money on hand:',
                                           style: TextStyle(
                                               fontSize: 21,
                                               fontWeight: FontWeight.bold),
@@ -148,12 +150,35 @@ class _ScrollableHomeContentsState extends State<ScrollableHomeContents> {
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
-                                      children: [sample3(context, records)],
-                                    )
-                            ),
-                                Container(
-                                    child: Text('Hi');
-                                )   
+                                      children: [
+                                        RecordsChart(records: records)
+                                      ],
+                                    )),
+                                Column(
+                                  children: [
+                                    Container(
+                                        child: ListView.separated(
+                                            shrinkWrap: true,
+                                            physics: NeverScrollableScrollPhysics(),
+                                            itemBuilder: (context, position) {
+                                              Record record =
+                                                  records.toList()[position];
+                                              return RecordCell(
+                                                  amount: record.amount.toString(),
+                                                  desc: record.desc,
+                                                  date: record.createdAt
+                                                      .toFormatterString(),
+                                                  type: record.type);
+                                            },
+                                            separatorBuilder: (context, position) {
+                                              return Container(decoration: BoxDecoration(color: Colors.black), height: 1);
+                                            },
+                                            itemCount: records.length < 5 ? records.length : 5),
+                                            ),
+                                  ],
+                                ),Container(child: TextButton(child: Text('View history'), onPressed: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => TransactionHistory(records: records)));
+                                })),
                               ],
                             ));
                       }),
@@ -171,36 +196,75 @@ class RecordCell extends StatelessWidget {
   final String amount;
   final String desc;
   final String date;
+  final RecordType type;
+
   const RecordCell(
-      {Key? key, required this.amount, required this.desc, required this.date})
+      {Key? key,
+      required this.amount,
+      required this.desc,
+      required this.date,
+      required this.type})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return Container(
-        child: Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
-      child: Align(
-          alignment: Alignment.topLeft,
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(
-              'Amount:\n' + amount,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.left,
+        width: size.width,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+                child: Icon(type == RecordType.expense
+                    ? Icons.arrow_circle_down
+                    : Icons.arrow_circle_up),
+                width: 60,
+                height: 60,
+                color: type == RecordType.expense ? Colors.red : Colors.green),
+            Container(
+              width: size.width * 0.55,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                child: Column(children: [
+                  Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(desc,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16))),
+                  Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(type.stringValue,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(color: Colors.grey))),
+                ]),
+              ),
             ),
-            Text(
-              'Description:\n' + desc,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.left,
-            ),
-            Text(
-              'Date:\n' + date,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.left,
-            ),
-          ])),
-    ));
+            Container(
+              width: size.width * 0.25,
+              child: Column(
+                children: [
+                  Align(
+                      alignment: Alignment.topRight,
+                      child: Text(
+                          (type == RecordType.expense ? '- ' : '+ ') + amount,
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: type == RecordType.expense
+                                  ? Colors.red
+                                  : Colors.green))),
+                  Align(
+                      alignment: Alignment.topRight,
+                      child: Text(date,
+                          textAlign: TextAlign.right,
+                          style: TextStyle(color: Colors.grey))),
+                ],
+              ),
+            )
+          ],
+        ));
   }
 }
 
