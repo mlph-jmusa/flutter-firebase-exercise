@@ -29,7 +29,7 @@ extension RecordTypeExt on RecordType {
       case RecordType.expense:
         return 'Expense';
       case RecordType.money:
-        return 'Money on hand';
+        return 'On hand';
     }
   }
 
@@ -78,7 +78,7 @@ class Record {
   }
 }
 
-String formatDate(DateTime _date, { String format = "MMMM dd, yyyy"} ) {
+String formatDate(DateTime _date, { String format = "MMM dd yyyy"} ) {
   var formatter = DateFormat(format);
   return formatter.format(_date);
 }

@@ -7,6 +7,8 @@ import 'addRecord.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'cacheManager.dart';
 import 'extensions.dart';
+import 'loading.dart';
+import 'error.dart';
 
 void main() => runApp(MoneyTracker());
 
@@ -31,7 +33,7 @@ class MoneyTracker extends StatelessWidget {
         if (snapshot.hasError) {
           return MaterialApp(
               title: 'Money Tracker',
-              home: Text('Error connecting to firebase'));
+              home:  CustomError(errorMessage: "Error connecting to Firebase."));
         }
 
         // Once complete, show your application
@@ -40,7 +42,7 @@ class MoneyTracker extends StatelessWidget {
         }
 
         // Otherwise, show something whilst waiting for initialization to complete
-        return MaterialApp(title: 'Money Tracker', home: Text('Loading...'));
+        return MaterialApp(title: 'Money Tracker', home: Loading());
       },
     );
   }
@@ -70,7 +72,7 @@ class _ScrollableHomeContentsState extends State<ScrollableHomeContents> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    final chart = RecordsChart(records: []);
+
     return SingleChildScrollView(
       child: Stack(
         children: <Widget>[
@@ -86,17 +88,19 @@ class _ScrollableHomeContentsState extends State<ScrollableHomeContents> {
                           .snapshots(),
                       builder: (BuildContext context,
                           AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (!snapshot.hasData && snapshot.hasError) return const Text('Error connecting to server');
-                        if (snapshot.connectionState == ConnectionState.waiting) return const Text('Loading...');
+                        if (!snapshot.hasData && snapshot.hasError)
+                          return const Text('Error connecting to server');
+                        if (snapshot.connectionState == ConnectionState.waiting)
+                          return const Text('Loading...');
 
                         var records =
                             snapshot.data?.docs.map((e) => Record.init(e)) ??
                                 [];
-
-                        chart.createState().setState(() {
-                          chart.createState().records = records;
-                        });
-                        
+                        if (recordsChartState != null) {
+                          recordsChartState?.setState(() {
+                            recordsChartState?.records = records;
+                          });
+                        }
 
                         var moneyOnHandRecords = records.where(
                             (element) => element.type == RecordType.money);
@@ -150,15 +154,11 @@ class _ScrollableHomeContentsState extends State<ScrollableHomeContents> {
                                         )
                                       ]),
                                 ),
-                                Container(height: 20),
                                 Container(
-                                    width: size.width,
-                                    alignment: Alignment.center,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [chart],
-                                    )),
+                                    height: 20, color: Colors.orangeAccent),
+                                Container(
+                                  height: (size.height * 0.3) + 48,
+                                    child: RecordsChart(records: records)),
                                 Container(height: 20),
                                 Column(
                                   children: [
@@ -247,7 +247,7 @@ class RecordCell extends StatelessWidget {
                     ? Colors.redAccent
                     : Colors.greenAccent),
             Container(
-              width: size.width * 0.55,
+              width: size.width * 0.45,
               child: Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10),
                 child: Column(children: [
@@ -266,13 +266,13 @@ class RecordCell extends StatelessWidget {
               ),
             ),
             Container(
-              width: size.width * 0.25,
+              width: size.width * 0.35,
               child: Column(
                 children: [
                   Align(
                       alignment: Alignment.topRight,
                       child: Text(
-                          (type == RecordType.expense ? '- ' : '+ ') + amount,
+                          (type == RecordType.expense ? '-' : '+') + amount,
                           textAlign: TextAlign.right,
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -284,7 +284,7 @@ class RecordCell extends StatelessWidget {
                       alignment: Alignment.topRight,
                       child: Text(date,
                           textAlign: TextAlign.right,
-                          style: TextStyle(color: Colors.grey))),
+                          style: TextStyle(color: Colors.grey, fontSize: 12))),
                 ],
               ),
             )

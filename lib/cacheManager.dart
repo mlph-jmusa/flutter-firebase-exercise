@@ -12,6 +12,7 @@ class CacheManager {
   static Future<DateTime?> getLaunchDate() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String dateTimeStringValue = prefs.getString(launchDateKey) ?? "";
-    return DateTime.tryParse(dateTimeStringValue);
+    // return DateTime.tryParse(dateTimeStringValue);
+    return DateTime(2021, 07, 07); // For testing purposes
   }
 }

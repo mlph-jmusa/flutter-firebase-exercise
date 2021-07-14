@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'constants.dart';
+import 'extensions.dart';
 
 class AddRecord extends StatefulWidget {
   final Record record;
@@ -55,39 +57,74 @@ class AddRecordForm extends StatefulWidget {
 
 class AddRecordFormState extends State<AddRecordForm> {
   late Record record;
+  final formkey = GlobalKey<FormState>();
 
   @override
   void initState() {
     record = widget.record;
-    widget.amountController.text = record.amount.toString();
+    widget.amountController.text =
+        record.amount <= 0.0 ? "" : record.amount.toString();
     widget.descController.text = record.desc;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        RecordTextField(
-            type: TextFieldType.amount,
-            controller: widget.amountController,
-            onTextChanged: (text) {
-              record.amount = double.tryParse(text) ?? 0.0;
-            }),
-        RecordTextField(
-            type: TextFieldType.description,
-            controller: widget.descController,
-            onTextChanged: (text) {
-              record.desc = text;
-            }),
-        DateWidget(
-            selectedDate: record.createdAt,
-            onSelect: (selectedDate) {
-              record.createdAt = selectedDate;
-            }),
-        AddButton(record: record)
-      ],
+    return Form(
+      key: formkey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          RecordTextField(
+              type: TextFieldType.amount,
+              controller: widget.amountController,
+              onTextChanged: (text) {
+                record.amount = double.tryParse(text) ?? 0.0;
+              },
+              formKey: formkey,
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Please enter amount";
+                }
+
+                if (!value.isNumeric()) {
+                  return "Please enter numbers only";
+                }
+
+                return null;
+              }),
+          RecordTextField(
+              type: TextFieldType.description,
+              controller: widget.descController,
+              onTextChanged: (text) {
+                record.desc = text;
+              },
+              formKey: formkey,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Please enter description";
+                }
+
+                return null;
+              }),
+          DateWidget(
+              selectedDate: record.createdAt,
+              onSelect: (selectedDate) {
+                var now = DateTime.now();
+                if (DateTime(now.year, now.month, now.day)
+                        .difference(DateTime(selectedDate.year,
+                            selectedDate.month, selectedDate.day))
+                        .inDays ==
+                    0) {
+                  record.createdAt = now;
+                  return;
+                }
+                record.createdAt = selectedDate;
+              }),
+          AddButton(record: record, formKey: formkey)
+        ],
+      ),
     );
   }
 }
@@ -95,13 +132,19 @@ class AddRecordFormState extends State<AddRecordForm> {
 class RecordTextField extends StatefulWidget {
   final TextFieldType type;
   final TextEditingController? controller;
-  final Function(String text) onTextChanged; 
+  final Function(String text) onTextChanged;
+  final GlobalKey<FormState> formKey;
+  final TextInputType? keyboardType;
+  final String? Function(String?)? validator;
 
   const RecordTextField(
       {Key? key,
       required this.type,
       required this.controller,
-      required this.onTextChanged})
+      required this.onTextChanged,
+      required this.formKey,
+      this.keyboardType,
+      required this.validator})
       : super(key: key);
 
   @override
@@ -116,12 +159,15 @@ class _RecordTextFieldState extends State<RecordTextField> {
     onTextChanged = widget.onTextChanged;
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
         child: Padding(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
       child: TextFormField(
+        keyboardType: widget.keyboardType ?? TextInputType.none,
+        validator: widget.validator,
         onChanged: (text) {
           onTextChanged(text);
         },
@@ -138,7 +184,9 @@ class _RecordTextFieldState extends State<RecordTextField> {
 
 class AddButton extends StatelessWidget {
   final Record record;
-  const AddButton({Key? key, required this.record}) : super(key: key);
+  final GlobalKey<FormState> formKey;
+  const AddButton({Key? key, required this.record, required this.formKey})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -151,12 +199,14 @@ class AddButton extends StatelessWidget {
             alignment: Alignment.center,
             child: TextButton(
                 onPressed: () {
-                  FirebaseFirestore.instance.collection('records').add({
-                    'type': record.type.intValue,
-                    'amount': record.amount.toString(),
-                    'desc': record.desc,
-                    'createdAt': record.createdAt,
-                  }).then((value) => {Navigator.pop(context)});
+                  if (formKey.currentState?.validate() == true) {
+                    FirebaseFirestore.instance.collection('records').add({
+                      'type': record.type.intValue,
+                      'amount': record.amount.toString(),
+                      'desc': record.desc,
+                      'createdAt': record.createdAt,
+                    }).then((value) => {Navigator.pop(context)});
+                  }
                 },
                 child: Text(
                   'Confirm',
