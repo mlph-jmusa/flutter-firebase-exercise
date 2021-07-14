@@ -209,7 +209,7 @@ class _DateWidgetState extends State<DateWidget> {
                   context: context,
                   initialDate: selectedDate,
                   firstDate: DateTime(2017, 1, 1),
-                  lastDate: DateTime(2030, 12, 31))
+                  lastDate: DateTime.now())
               .then((value) => {
                     onSelect(value!),
                     setState(() {

@@ -7,6 +7,7 @@ import 'constants.dart';
 class RecordsChart extends StatefulWidget {
   const RecordsChart({Key? key, required this.records}) : super(key: key);
   final Iterable<Record> records;
+  // final Function reloadChart;
 
   @override
   _RecordsChartState createState() => _RecordsChartState();
@@ -15,11 +16,17 @@ class RecordsChart extends StatefulWidget {
 
 class _RecordsChartState extends State<RecordsChart> {
   late Iterable<Record> records;
+  // late Function reloadChart;
 
   @override
   void initState() {
     records = widget.records;
     super.initState();
+  }
+
+  void reload(Iterable<Record> records) {
+    this.records = records;
+    setState(() {});
   }
 
   @override
@@ -38,7 +45,6 @@ class _RecordsChartState extends State<RecordsChart> {
 
           return Center(
             child: Container(
-              color: Colors.red,
               height: MediaQuery.of(context).size.height * 0.5,
               width: MediaQuery.of(context).size.width,
               child: BezierChart(
@@ -58,7 +64,7 @@ class _RecordsChartState extends State<RecordsChart> {
                   verticalIndicatorColor: Colors.black26,
                   showVerticalIndicator: true,
                   verticalIndicatorFixedPosition: false,
-                  backgroundColor: Colors.red,
+                  backgroundColor: Colors.orangeAccent,
                   footerHeight: 50.0,
                   displayDataPointWhenNoValue: false,
                   displayYAxis: true,

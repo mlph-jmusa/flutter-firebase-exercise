@@ -70,6 +70,7 @@ class _ScrollableHomeContentsState extends State<ScrollableHomeContents> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    final chart = RecordsChart(records: []);
     return SingleChildScrollView(
       child: Stack(
         children: <Widget>[
@@ -81,15 +82,21 @@ class _ScrollableHomeContentsState extends State<ScrollableHomeContents> {
                   StreamBuilder(
                       stream: FirebaseFirestore.instance
                           .collection('records')
+                          .orderBy("createdAt", descending: true)
                           .snapshots(),
                       builder: (BuildContext context,
                           AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (!snapshot.hasData && snapshot.hasError)
-                          return const Text('Error connecting to server');
+                        if (!snapshot.hasData && snapshot.hasError) return const Text('Error connecting to server');
+                        if (snapshot.connectionState == ConnectionState.waiting) return const Text('Loading...');
 
                         var records =
                             snapshot.data?.docs.map((e) => Record.init(e)) ??
                                 [];
+
+                        chart.createState().setState(() {
+                          chart.createState().records = records;
+                        });
+                        
 
                         var moneyOnHandRecords = records.where(
                             (element) => element.type == RecordType.money);
@@ -121,7 +128,7 @@ class _ScrollableHomeContentsState extends State<ScrollableHomeContents> {
                                 Container(
                                   height: size.height * 0.2,
                                   width: size.width,
-                                  color: Colors.green,
+                                  color: Colors.teal.shade200,
                                   alignment: Alignment.center,
                                   child: Column(
                                       mainAxisAlignment:
@@ -136,49 +143,65 @@ class _ScrollableHomeContentsState extends State<ScrollableHomeContents> {
                                         Text(
                                           ((totalMoneyOnHand + totalIncome) -
                                                   totalExpenses)
-                                              .toString(),
+                                              .toCurrency(),
                                           style: TextStyle(
                                               fontSize: 30,
                                               fontWeight: FontWeight.bold),
                                         )
                                       ]),
                                 ),
+                                Container(height: 20),
                                 Container(
                                     width: size.width,
-                                    // color: Colors.green,
                                     alignment: Alignment.center,
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
-                                      children: [
-                                        RecordsChart(records: records)
-                                      ],
+                                      children: [chart],
                                     )),
+                                Container(height: 20),
                                 Column(
                                   children: [
                                     Container(
-                                        child: ListView.separated(
-                                            shrinkWrap: true,
-                                            physics: NeverScrollableScrollPhysics(),
-                                            itemBuilder: (context, position) {
-                                              Record record =
-                                                  records.toList()[position];
-                                              return RecordCell(
-                                                  amount: record.amount.toString(),
-                                                  desc: record.desc,
-                                                  date: record.createdAt
-                                                      .toFormatterString(),
-                                                  type: record.type);
-                                            },
-                                            separatorBuilder: (context, position) {
-                                              return Container(decoration: BoxDecoration(color: Colors.black), height: 1);
-                                            },
-                                            itemCount: records.length < 5 ? records.length : 5),
-                                            ),
+                                      child: ListView.separated(
+                                          shrinkWrap: true,
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          itemBuilder: (context, position) {
+                                            Record record =
+                                                records.toList()[position];
+                                            return RecordCell(
+                                                amount:
+                                                    record.amount.toCurrency(),
+                                                desc: record.desc,
+                                                date: record.createdAt
+                                                    .toFormatterString(),
+                                                type: record.type);
+                                          },
+                                          separatorBuilder:
+                                              (context, position) {
+                                            return Container(
+                                                decoration: BoxDecoration(
+                                                    color: Colors.black),
+                                                height: 1);
+                                          },
+                                          itemCount: records.length < 5
+                                              ? records.length
+                                              : 5),
+                                    ),
                                   ],
-                                ),Container(child: TextButton(child: Text('View history'), onPressed: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => TransactionHistory(records: records)));
-                                })),
+                                ),
+                                Container(
+                                    child: TextButton(
+                                        child: Text('View history'),
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      TransactionHistory(
+                                                          records: records)));
+                                        })),
                               ],
                             ));
                       }),
@@ -220,7 +243,9 @@ class RecordCell extends StatelessWidget {
                     : Icons.arrow_circle_up),
                 width: 60,
                 height: 60,
-                color: type == RecordType.expense ? Colors.red : Colors.green),
+                color: type == RecordType.expense
+                    ? Colors.redAccent
+                    : Colors.greenAccent),
             Container(
               width: size.width * 0.55,
               child: Padding(
@@ -297,9 +322,9 @@ class DashboardButtons extends StatelessWidget {
                   fixedSize: MaterialStateProperty.all<Size>(
                       Size(size.width * 0.23, 50)),
                   foregroundColor:
-                      MaterialStateProperty.all<Color>(Colors.blueAccent),
+                      MaterialStateProperty.all<Color>(Colors.white),
                   backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.black)),
+                      MaterialStateProperty.all<Color>(Colors.indigo.shade500)),
             ),
             Container(
               width: size.width * 0.07,
@@ -319,9 +344,9 @@ class DashboardButtons extends StatelessWidget {
               style: ButtonStyle(
                   fixedSize: MaterialStateProperty.all<Size>(Size(100, 50)),
                   foregroundColor:
-                      MaterialStateProperty.all<Color>(Colors.blue),
+                      MaterialStateProperty.all<Color>(Colors.white),
                   backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.black)),
+                      MaterialStateProperty.all<Color>(Colors.indigo.shade500)),
             ),
             Container(
               width: size.width * 0.07,
@@ -342,9 +367,9 @@ class DashboardButtons extends StatelessWidget {
                   fixedSize: MaterialStateProperty.all<Size>(
                       Size(size.width * 0.23, 50)),
                   foregroundColor:
-                      MaterialStateProperty.all<Color>(Colors.blue),
+                      MaterialStateProperty.all<Color>(Colors.white),
                   backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.black)),
+                      MaterialStateProperty.all<Color>(Colors.indigo.shade500)),
             )
           ],
         ),
