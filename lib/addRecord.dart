@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'constants.dart';
 import 'extensions.dart';
+import 'main.dart';
 
 class AddRecord extends StatefulWidget {
   final Record record;
@@ -166,7 +167,7 @@ class _RecordTextFieldState extends State<RecordTextField> {
         child: Padding(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
       child: TextFormField(
-        keyboardType: widget.keyboardType ?? TextInputType.none,
+        keyboardType: widget.keyboardType ?? TextInputType.text,
         validator: widget.validator,
         onChanged: (text) {
           onTextChanged(text);
@@ -202,9 +203,11 @@ class AddButton extends StatelessWidget {
                   if (formKey.currentState?.validate() == true) {
                     FirebaseFirestore.instance.collection('records').add({
                       'type': record.type.intValue,
-                      'amount': record.amount.toString(),
+                      'amount': record.amount,
                       'desc': record.desc,
                       'createdAt': record.createdAt,
+                      'oldTotalMoneyOnHand': remainingTotalMoneyOnHand,
+                      'newTotalMoneyOnHand': (remainingTotalMoneyOnHand + (record.type == RecordType.expense ? (record.amount * -1) : record.amount)) 
                     }).then((value) => {Navigator.pop(context)});
                   }
                 },

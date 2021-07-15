@@ -34,7 +34,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                       amount: record.amount.toString(),
                       desc: record.desc,
                       date: record.createdAt.toFormatterString(),
-                      type: record.type);
+                      type: record.type, newTotalMoneyOnHand: record.newTotalMoneyOnHand?.toCurrency() ?? "",);
                 },
                 separatorBuilder: (context, position) {
                   return Container(decoration: BoxDecoration(color: Colors.black), height: 1);

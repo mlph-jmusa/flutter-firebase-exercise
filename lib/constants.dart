@@ -64,6 +64,8 @@ class Record {
   RecordType type;
   double amount;
   String desc;
+  double? newTotalMoneyOnHand;
+  double? oldTotalMoneyOnHand;
   DateTime createdAt;
 
   Record(this.type, this.amount, this.desc, this.createdAt);
@@ -74,7 +76,13 @@ class Record {
     String desc = data["desc"].toString();
     Timestamp _date = data["createdAt"];
     DateTime date = _date.toDate();
-    return Record(type, amount, desc, date);
+    double newTotalMoneyOnHand = double.tryParse(data["newTotalMoneyOnHand"].toString()) ?? 0.0;
+    double oldTotalMoneyOnHand = double.tryParse(data["oldTotalMoneyOnHand"].toString()) ?? 0.0;
+    var record = Record(type, amount, desc, date);
+    record.newTotalMoneyOnHand = newTotalMoneyOnHand;
+    record.oldTotalMoneyOnHand = oldTotalMoneyOnHand;
+    
+    return record;
   }
 }
 

@@ -11,6 +11,7 @@ import 'loading.dart';
 import 'error.dart';
 
 void main() => runApp(MoneyTracker());
+double remainingTotalMoneyOnHand = 0.0;
 
 class MoneyTracker extends StatelessWidget {
   @override
@@ -121,6 +122,9 @@ class _ScrollableHomeContentsState extends State<ScrollableHomeContents> {
                             (previousValue, element) =>
                                 previousValue + element.amount);
 
+                        remainingTotalMoneyOnHand = ((totalMoneyOnHand + totalIncome) -
+                                                  totalExpenses);
+
                         return Container(
                             // height: size.height * 0.2,
                             width: size.width,
@@ -145,9 +149,7 @@ class _ScrollableHomeContentsState extends State<ScrollableHomeContents> {
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(
-                                          ((totalMoneyOnHand + totalIncome) -
-                                                  totalExpenses)
-                                              .toCurrency(),
+                                          remainingTotalMoneyOnHand.toCurrency(),
                                           style: TextStyle(
                                               fontSize: 30,
                                               fontWeight: FontWeight.bold),
@@ -176,6 +178,7 @@ class _ScrollableHomeContentsState extends State<ScrollableHomeContents> {
                                                 desc: record.desc,
                                                 date: record.createdAt
                                                     .toFormatterString(),
+                                                    newTotalMoneyOnHand: record.newTotalMoneyOnHand?.toCurrency() ?? "",
                                                 type: record.type);
                                           },
                                           separatorBuilder:
@@ -193,8 +196,9 @@ class _ScrollableHomeContentsState extends State<ScrollableHomeContents> {
                                 ),
                                 Container(
                                     child: TextButton(
-                                        child: Text('View history'),
+                                        child: Text(records.isEmpty ? 'No Data' :'View history'),
                                         onPressed: () {
+                                          if (records.isEmpty) return;
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
@@ -219,6 +223,7 @@ class RecordCell extends StatelessWidget {
   final String amount;
   final String desc;
   final String date;
+  final String newTotalMoneyOnHand;
   final RecordType type;
 
   const RecordCell(
@@ -226,6 +231,7 @@ class RecordCell extends StatelessWidget {
       required this.amount,
       required this.desc,
       required this.date,
+      required this.newTotalMoneyOnHand,
       required this.type})
       : super(key: key);
 
@@ -280,6 +286,15 @@ class RecordCell extends StatelessWidget {
                               color: type == RecordType.expense
                                   ? Colors.red
                                   : Colors.green))),
+                                  Align(
+                      alignment: Alignment.topRight,
+                      child: Text(
+                          newTotalMoneyOnHand,
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                              color: Colors.grey.shade500))),
                   Align(
                       alignment: Alignment.topRight,
                       child: Text(date,
