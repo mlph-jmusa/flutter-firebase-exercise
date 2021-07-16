@@ -45,73 +45,75 @@ class _RecordsChartState extends State<RecordsChart> {
               date.data ?? DateTime.now().subtract(Duration(days: 1));
           final toDate = DateTime.now();
 
-          return Container(
-            color: Colors.orangeAccent,
-            child: Column(
-              children: [
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  TextButton(
-                      child: Text('Weekly'),
-                      onPressed: () {
-                        setState(() {
-                          mode = ChartMode.weekly;
-                        });
-                      },
-                      style: ButtonStyle(
-                          fixedSize:
-                              MaterialStateProperty.all<Size>(Size(90, 40)),
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              mode == ChartMode.weekly ? Colors.purpleAccent : Colors.grey.shade400),
-                          foregroundColor:
-                              MaterialStateProperty.all<Color>(Colors.white))),
-                  Container(width: 10),
-                  TextButton(
-                      child: Text('Monthly'),
-                      onPressed: () {
-                        setState(() {
-                          mode = ChartMode.monthly;
-                        });
-                      },
-                      style: ButtonStyle(
-                          fixedSize:
-                              MaterialStateProperty.all<Size>(Size(90, 40)),
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              mode == ChartMode.monthly ? Colors.purpleAccent : Colors.grey.shade400),
-                          foregroundColor:
-                              MaterialStateProperty.all<Color>(Colors.white)))
-                ]),
-                Center(
-                  child: Container(
-                    height: (MediaQuery.of(context).size.height * 0.3),
-                    width: MediaQuery.of(context).size.width,
-                    child: BezierChart(
-                      fromDate: fromDate,
-                      bezierChartScale: mode == ChartMode.weekly
-                          ? BezierChartScale.WEEKLY
-                          : BezierChartScale.MONTHLY,
-                      toDate: toDate,
-                      selectedDate: toDate,
-                      series: [
-                        BezierLine(
-                            data: records
-                                .map((e) => DataPoint<DateTime>(
-                                    value: e.type == RecordType.expense ? (e.amount * -1) : e.amount, xAxis: e.createdAt))
-                                .toList()),
-                      ],
-                      config: BezierChartConfig(
-                        verticalIndicatorStrokeWidth: 3.0,
-                        verticalIndicatorColor: Colors.black26,
-                        showVerticalIndicator: true,
-                        verticalIndicatorFixedPosition: false,
-                        // backgroundColor: Colors.orangeAccent,
-                        footerHeight: 50.0,
-                        displayDataPointWhenNoValue: false,
-                        displayYAxis: true
+          return Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: Container(
+              child: Column(
+                children: [
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    TextButton(
+                        child: Text('Weekly'),
+                        onPressed: () {
+                          setState(() {
+                            mode = ChartMode.weekly;
+                          });
+                        },
+                        style: ButtonStyle(
+                            fixedSize:
+                                MaterialStateProperty.all<Size>(Size(90, 40)),
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                mode == ChartMode.weekly ? Colors.purpleAccent : Colors.grey.shade400),
+                            foregroundColor:
+                                MaterialStateProperty.all<Color>(Colors.white))),
+                    Container(width: 10),
+                    TextButton(
+                        child: Text('Monthly'),
+                        onPressed: () {
+                          setState(() {
+                            mode = ChartMode.monthly;
+                          });
+                        },
+                        style: ButtonStyle(
+                            fixedSize:
+                                MaterialStateProperty.all<Size>(Size(90, 40)),
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                mode == ChartMode.monthly ? Colors.purpleAccent : Colors.grey.shade400),
+                            foregroundColor:
+                                MaterialStateProperty.all<Color>(Colors.white)))
+                  ]),
+                  Center(
+                    child: Container(
+                      height: (MediaQuery.of(context).size.height * 0.3),
+                      width: MediaQuery.of(context).size.width,
+                      child: BezierChart(
+                        fromDate: fromDate,
+                        bezierChartScale: mode == ChartMode.weekly
+                            ? BezierChartScale.WEEKLY
+                            : BezierChartScale.MONTHLY,
+                        toDate: toDate,
+                        selectedDate: toDate,
+                        series: [
+                          BezierLine(
+                              data: records
+                                  .map((e) => DataPoint<DateTime>(
+                                      value: e.type == RecordType.expense ? (e.amount * -1) : e.amount, xAxis: e.createdAt))
+                                  .toList()),
+                        ],
+                        config: BezierChartConfig(
+                          verticalIndicatorStrokeWidth: 3.0,
+                          verticalIndicatorColor: Colors.black26,
+                          showVerticalIndicator: true,
+                          verticalIndicatorFixedPosition: false,
+                          // backgroundColor: Colors.orangeAccent,
+                          footerHeight: 50.0,
+                          displayDataPointWhenNoValue: false,
+                          displayYAxis: true
+                        ),
                       ),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           );
         });

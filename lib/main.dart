@@ -9,6 +9,7 @@ import 'cacheManager.dart';
 import 'extensions.dart';
 import 'loading.dart';
 import 'error.dart';
+import 'recordCell.dart';
 
 void main() => runApp(MoneyTracker());
 double remainingTotalMoneyOnHand = 0.0;
@@ -34,7 +35,7 @@ class MoneyTracker extends StatelessWidget {
         if (snapshot.hasError) {
           return MaterialApp(
               title: 'Money Tracker',
-              home:  CustomError(errorMessage: "Error connecting to Firebase."));
+              home: CustomError(errorMessage: "Error connecting to Firebase."));
         }
 
         // Once complete, show your application
@@ -122,81 +123,111 @@ class _ScrollableHomeContentsState extends State<ScrollableHomeContents> {
                             (previousValue, element) =>
                                 previousValue + element.amount);
 
-                        remainingTotalMoneyOnHand = ((totalMoneyOnHand + totalIncome) -
-                                                  totalExpenses);
+                        remainingTotalMoneyOnHand =
+                            ((totalMoneyOnHand + totalIncome) - totalExpenses);
 
                         return Container(
-                            // height: size.height * 0.2,
                             width: size.width,
-                            // color: Colors.green,
                             alignment: Alignment.center,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Container(
-                                  height: size.height * 0.2,
-                                  width: size.width,
-                                  color: Colors.teal.shade200,
-                                  alignment: Alignment.center,
-                                  child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          'Money on hand:',
-                                          style: TextStyle(
-                                              fontSize: 21,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(
-                                          remainingTotalMoneyOnHand.toCurrency(),
-                                          style: TextStyle(
-                                              fontSize: 30,
-                                              fontWeight: FontWeight.bold),
-                                        )
-                                      ]),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 20, bottom: 10, left: 10, right: 10),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: Colors.teal.shade200),
+                                    height: size.height * 0.2,
+                                    width: size.width,
+                                    alignment: Alignment.center,
+                                    child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'Money on hand:',
+                                            style: TextStyle(
+                                                fontSize: 21,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                            remainingTotalMoneyOnHand
+                                                .toCurrency(),
+                                            style: TextStyle(
+                                                fontSize: 30,
+                                                fontWeight: FontWeight.bold),
+                                          )
+                                        ]),
+                                  ),
                                 ),
-                                Container(
-                                    height: 20, color: Colors.orangeAccent),
-                                Container(
-                                  height: (size.height * 0.3) + 48,
-                                    child: RecordsChart(records: records)),
-                                Container(height: 20),
-                                Column(
-                                  children: [
-                                    Container(
-                                      child: ListView.separated(
-                                          shrinkWrap: true,
-                                          physics:
-                                              NeverScrollableScrollPhysics(),
-                                          itemBuilder: (context, position) {
-                                            Record record =
-                                                records.toList()[position];
-                                            return RecordCell(
-                                                amount:
-                                                    record.amount.toCurrency(),
-                                                desc: record.desc,
-                                                date: record.createdAt
-                                                    .toFormatterString(),
-                                                    newTotalMoneyOnHand: record.newTotalMoneyOnHand?.toCurrency() ?? "",
-                                                type: record.type);
-                                          },
-                                          separatorBuilder:
-                                              (context, position) {
-                                            return Container(
-                                                decoration: BoxDecoration(
-                                                    color: Colors.black),
-                                                height: 1);
-                                          },
-                                          itemCount: records.length < 5
-                                              ? records.length
-                                              : 5),
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Expanded(
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.orangeAccent,
+                                            borderRadius:
+                                                BorderRadius.circular(20)),
+                                        child: RecordsChart(records: records)),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Expanded(
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              color: Colors.grey.shade200),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 20, bottom: 20),
+                                            child: ListView.separated(
+                                                shrinkWrap: true,
+                                                physics:
+                                                    NeverScrollableScrollPhysics(),
+                                                itemBuilder: (context, position) {
+                                                  Record record =
+                                                      records.toList()[position];
+                                                  return RecordCell(
+                                                      amount: record.amount
+                                                          .toCurrency(),
+                                                      desc: record.desc,
+                                                      date: record.createdAt
+                                                          .toFormatterString(),
+                                                      newTotalMoneyOnHand: record
+                                                              .newTotalMoneyOnHand
+                                                              ?.toCurrency() ??
+                                                          "",
+                                                      type: record.type);
+                                                },
+                                                separatorBuilder:
+                                                    (context, position) {
+                                                  return Padding(
+                                                    padding: const EdgeInsets.only(top: 10, bottom: 10),
+                                                    child: Container(
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.black),
+                                                        height: 1),
+                                                  );
+                                                },
+                                                itemCount: records.length < 5
+                                                    ? records.length
+                                                    : 5),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
+                                  ),
                                 ),
                                 Container(
                                     child: TextButton(
-                                        child: Text(records.isEmpty ? 'No Data' :'View history'),
+                                        child: Text(records.isEmpty
+                                            ? 'No Data'
+                                            : 'View history'),
                                         onPressed: () {
                                           if (records.isEmpty) return;
                                           Navigator.push(
@@ -216,95 +247,6 @@ class _ScrollableHomeContentsState extends State<ScrollableHomeContents> {
         ],
       ),
     );
-  }
-}
-
-class RecordCell extends StatelessWidget {
-  final String amount;
-  final String desc;
-  final String date;
-  final String newTotalMoneyOnHand;
-  final RecordType type;
-
-  const RecordCell(
-      {Key? key,
-      required this.amount,
-      required this.desc,
-      required this.date,
-      required this.newTotalMoneyOnHand,
-      required this.type})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    return Container(
-        width: size.width,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-                child: Icon(type == RecordType.expense
-                    ? Icons.arrow_circle_down
-                    : Icons.arrow_circle_up),
-                width: 60,
-                height: 60,
-                color: type == RecordType.expense
-                    ? Colors.redAccent
-                    : Colors.greenAccent),
-            Container(
-              width: size.width * 0.45,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                child: Column(children: [
-                  Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(desc,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16))),
-                  Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(type.stringValue,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(color: Colors.grey))),
-                ]),
-              ),
-            ),
-            Container(
-              width: size.width * 0.35,
-              child: Column(
-                children: [
-                  Align(
-                      alignment: Alignment.topRight,
-                      child: Text(
-                          (type == RecordType.expense ? '-' : '+') + amount,
-                          textAlign: TextAlign.right,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: type == RecordType.expense
-                                  ? Colors.red
-                                  : Colors.green))),
-                                  Align(
-                      alignment: Alignment.topRight,
-                      child: Text(
-                          newTotalMoneyOnHand,
-                          textAlign: TextAlign.right,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13,
-                              color: Colors.grey.shade500))),
-                  Align(
-                      alignment: Alignment.topRight,
-                      child: Text(date,
-                          textAlign: TextAlign.right,
-                          style: TextStyle(color: Colors.grey, fontSize: 12))),
-                ],
-              ),
-            )
-          ],
-        ));
   }
 }
 

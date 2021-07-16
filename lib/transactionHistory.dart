@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'constants.dart';
-import 'main.dart';
+import 'recordCell.dart';
 import 'extensions.dart';
 
 class TransactionHistory extends StatefulWidget {
@@ -37,7 +37,13 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                       type: record.type, newTotalMoneyOnHand: record.newTotalMoneyOnHand?.toCurrency() ?? "",);
                 },
                 separatorBuilder: (context, position) {
-                  return Container(decoration: BoxDecoration(color: Colors.black), height: 1);
+                  return Padding(
+                                                    padding: const EdgeInsets.only(top: 10, bottom: 10),
+                                                    child: Container(
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.black),
+                                                        height: 1),
+                                                  );
                 },
                 itemCount: records.length),
           )),
