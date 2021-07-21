@@ -1,4 +1,4 @@
-import 'package:firebase_exercise_1/constants.dart';
+import 'package:firebase_exercise_1/Extras/constants.dart';
 import 'package:flutter/material.dart';
 
 class RecordCell extends StatelessWidget {

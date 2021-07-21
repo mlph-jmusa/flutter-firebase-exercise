@@ -1,6 +1,10 @@
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:intl/intl.dart';
-import 'constants.dart';
+
+String formatDate(DateTime _date, { String format = "MMM dd yyyy"} ) {
+  var formatter = DateFormat(format);
+  return formatter.format(_date);
+}
 
 extension DateTimeExtension on DateTime {
   String toFormatterString() {

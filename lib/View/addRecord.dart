@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'constants.dart';
-import 'extensions.dart';
-import 'main.dart';
+import '/Extras/constants.dart';
+import '/Extras/extensions.dart';
+import '/Model/Record.dart';
+import '../main.dart';
 
 class AddRecord extends StatefulWidget {
   final Record record;

@@ -1,15 +1,16 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_exercise_1/charts.dart';
-import 'package:firebase_exercise_1/constants.dart';
-import 'package:firebase_exercise_1/transactionHistory.dart';
+import '/View/charts.dart';
+import '/Extras/constants.dart';
+import '/View/transactionHistory.dart';
 import 'package:flutter/material.dart';
-import 'addRecord.dart';
+import 'View/addRecord.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'cacheManager.dart';
-import 'extensions.dart';
-import 'loading.dart';
-import 'error.dart';
-import 'recordCell.dart';
+import '/Extras/cacheManager.dart';
+import '/Extras/extensions.dart';
+import 'View/loading.dart';
+import 'View/error.dart';
+import '/View/Cell/recordCell.dart';
+import '/Model/Record.dart';
 
 void main() => runApp(MoneyTracker());
 double remainingTotalMoneyOnHand = 0.0;

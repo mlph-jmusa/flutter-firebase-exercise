@@ -1,8 +1,9 @@
-import 'package:firebase_exercise_1/cacheManager.dart';
+import '/Extras/cachemanager.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:bezier_chart/bezier_chart.dart';
-import 'constants.dart';
+import '/Extras/constants.dart';
+import '/Model/Record.dart';
 
 _RecordsChartState? recordsChartState;
 
